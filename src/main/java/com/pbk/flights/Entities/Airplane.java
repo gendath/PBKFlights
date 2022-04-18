@@ -1,13 +1,25 @@
 package com.pbk.flights.Entities;
 
+
+import javax.persistence.*;
 import java.util.Map;
 
 import static java.util.Map.entry;
-
+@Entity
 public class Airplane {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     private String model;
-    private final Map<String, User> seats;
+
+
+    @ElementCollection
+    @CollectionTable(name = "airplane_seat_mapping",
+            joinColumns = {@JoinColumn(name = "airplane_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "seat")
+    @Column(name = "seats")
+    private final Map<String, Integer> seats;
     private String price;
 
     public Airplane() {
@@ -20,7 +32,7 @@ public class Airplane {
         );
     }
 
-    public Map<String, User> getSeats() {
+    public Map<String, Integer> getSeats() {
         return seats;
     }
 
