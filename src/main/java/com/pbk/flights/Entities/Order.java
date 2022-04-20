@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Booker {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +27,7 @@ public class Booker {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Booker order = (Booker) o;
+        Order order = (Order) o;
 
         return orderID == order.orderID;
     }
