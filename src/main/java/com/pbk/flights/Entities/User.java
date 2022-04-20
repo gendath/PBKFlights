@@ -15,7 +15,7 @@ public class User {
     private String password;
     @OneToMany
     @JoinColumn(name = "user_id")
-    private final Set<Order> bookings= new HashSet<>();
+    private final Set<Booker> bookings= new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -72,7 +72,7 @@ public class User {
         this.password = password;
     }
 
-    public Set<Order> getBookings() {
+    public Set<Booker> getBookings() {
         return bookings;
     }
 }
