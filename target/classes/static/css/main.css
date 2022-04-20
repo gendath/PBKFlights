@@ -1,0 +1,45 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+#brand {
+    font-weight: bold;
+    color:#c8102e;
+    text-shadow: #0f0f0f 1px 0 1px;
+}
+
+.navbar-custom {
+    background-color: #003a70;
+    clip-path: polygon(0 0%, 100% 0%,100% 100%,50% 95%, 0% 100%);
+}
+.btn-custom {
+    background-color: #003a70;
+    color: white;
+}
+
+.jumbotron {
+    background-color: rgba(134, 38, 51);
+    color: #003a70;
+    text-shadow: black 1px 1px 1px;
+    font-weight: bold;
+    clip-path: polygon(0 0%, 50% 3%,100% 0%,99.7% 50%, 100% 100%,50% 97%, 0% 100%,.3% 50%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
