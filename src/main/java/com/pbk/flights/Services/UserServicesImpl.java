@@ -23,7 +23,7 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public User getUser() {
+    public User getUser(int userid) {
         return null;
     }
 
