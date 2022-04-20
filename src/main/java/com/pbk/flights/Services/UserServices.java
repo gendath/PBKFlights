@@ -8,8 +8,9 @@ public interface UserServices {
     boolean login(String username, String password);
     boolean logout();
     List<User> getUsers();
-    User getUser();
     boolean addUser(User user);
     boolean updateUser(User user);
     boolean deleteUser(int ID);
+
+    User getUser(int parseInt);
 }

@@ -1,4 +1,4 @@
-package Controller;
+package com.pbk.flights.Controllers;
 
 import com.pbk.flights.Entities.Flight;
 import com.pbk.flights.Entities.User;
