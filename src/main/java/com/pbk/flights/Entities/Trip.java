@@ -1,9 +1,8 @@
 package com.pbk.flights.Entities;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Trip {
@@ -21,6 +20,14 @@ public class Trip {
     @OneToOne
     private Hub destination;
 
+    public Trip() {
+    }
+
+    public Trip(Flight flight) {
+        flights.add(flight);
+    }
+
+
     public void addFlight(Flight flight) {
         flights.add(flight);
     }
@@ -33,6 +40,21 @@ public class Trip {
             return op.get();
         }
         return -1d;
+    }
+
+    public Flight getLastFlight() {
+        if (flights.isEmpty()) return null;
+        var sorted = flights.stream()
+                .sorted(Comparator.comparing(Flight::getDeparture))
+                .collect(Collectors.toList());
+        if (sorted.isEmpty()) return null;
+        return sorted.get(sorted.size()-1);
+    }
+
+    public boolean hasVisited(Hub hub) {
+        if (flights == null || flights.isEmpty()) return false;
+        if (flights.stream().anyMatch(flight -> flight.getOrigin() == hub)) return true;
+        return false;
     }
 
     @Override
