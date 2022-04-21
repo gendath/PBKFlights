@@ -51,15 +51,21 @@
     <table>
         <tr>
             <th>Flight</th>
+            <th>Plane</th>
             <th>Origination</th>
             <th>Destination</th>
-            <th>Time</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Price</th>
         </tr>
         <tr th:each="flight: ${flights}">
-            <td>flight.getId()</td>
-            <td>Washington, DC</td>
-            <td>Seattle, WA</td>
-            <td>12:00PM</td>
+            <td th:text="${flight.getFlightId()}">123</td>
+            <td th:text="${flight.getPlane().getModel()}">123</td>
+            <td th:text="${flight.getOrigin().getName()}">Washington, DC</td>
+            <td th:text="${flight.getDestination().getName()}">Seattle, WA</td>
+            <td th:text="${flight.getDeparture().getHours()}">12:00PM</td>
+            <td th:text="${flight.getArrival().getHours()}">12:00PM</td>
+            <td th:text="${flight.getPrice()}">12:00PM</td>
         </tr>
     </table>
 </div>
