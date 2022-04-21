@@ -1,44 +1,91 @@
 package com.pbk.flights.Services;
 
+import com.pbk.flights.Dao.UserDao;
 import com.pbk.flights.Entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
 public class UserServicesImpl implements UserServices {
+
+    @Autowired
+    UserDao userDao;
+
     @Override
-    public boolean login(String username, String password) {
-        return false;
+    public boolean addUser(User user, HttpServletRequest request) {     // This is Sign Up function
+        if (userDao.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
+            System.out.println("A user with this email already exists");
+            return false;
+        }
+        login(userDao.save(user), request);
+        return true;
     }
 
     @Override
-    public boolean logout() {
-        return false;
+    public boolean login(User user, HttpServletRequest request) {
+        User current = userDao.findAll().stream()
+                .filter(u-> u.getEmail().equals(user.getEmail()))
+                .filter(u-> u.getPassword().equals(user.getPassword()))
+                .findFirst().orElse(null);
+        if (current == null) {
+            System.out.println("Invalid username or password");
+
+            logout(request);
+            return false;
+        }
+
+        request.getSession().setAttribute("userid", current.getUserId());
+        request.getSession().setAttribute("username", current.getEmail());
+        request.getSession().setAttribute("firstName", current.getFirstName());
+        request.getSession().setAttribute("lastName", current.getLastName());
+        request.getSession().setAttribute("authority", "user");
+        // TODO: call authenticate
+        return true;
+    }
+
+    // TODO: add OAuth login method
+
+    @Override
+    public boolean logout(HttpServletRequest request) {
+        try {
+            request.getSession().setAttribute("userid", "");
+            request.getSession().setAttribute("username", "");
+            request.getSession().setAttribute("firstName", "");
+            request.getSession().setAttribute("lastName", "");
+            request.getSession().setAttribute("authority", "");
+            request.logout();
+            request.getSession().invalidate();
+            return true;
+        } catch (ServletException e) {
+            return false;
+        }
     }
 
     @Override
     public List<User> getUsers() {
-        return null;
+        return userDao.findAll();
     }
 
     @Override
-    public User getUser() {
-        return null;
-    }
-
-    @Override
-    public boolean addUser(User user) {
-        return false;
+    public User getUser(int userID) {
+        var u = userDao.findById(userID).orElse(null);
+        if (u == null) throw new RuntimeException("User ID was not valid");
+        return u;
     }
 
     @Override
     public boolean updateUser(User user) {
-        return false;
+        userDao.save(user);
+        return true;
     }
 
     @Override
     public boolean deleteUser(int ID) {
-        return false;
+        userDao.deleteById(ID);
+        return true;
     }
 }
