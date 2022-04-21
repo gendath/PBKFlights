@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -16,17 +17,17 @@ public class UserServicesImpl implements UserServices {
     UserDao userDao;
 
     @Override
-    public boolean addUser(User user, HttpServletRequest request) {     // This is Sign Up function
+    public boolean addUser(User user, HttpServletRequest request, HttpServletResponse response) {     // This is Sign Up function
         if (userDao.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
             System.out.println("A user with this email already exists");
             return false;
         }
-        login(userDao.save(user), request);
+        login(userDao.save(user), request, response);
         return true;
     }
 
     @Override
-    public boolean login(User user, HttpServletRequest request) {
+    public boolean login(User user, HttpServletRequest request, HttpServletResponse response) {
         User current = userDao.findAll().stream()
                 .filter(u-> u.getEmail().equals(user.getEmail()))
                 .filter(u-> u.getPassword().equals(user.getPassword()))
@@ -43,7 +44,11 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("firstName", current.getFirstName());
         request.getSession().setAttribute("lastName", current.getLastName());
         request.getSession().setAttribute("authority", "user");
-        // TODO: call authenticate
+        try {
+            request.authenticate(response);
+        } catch (Exception e) {
+            System.out.println("Could not authenticate user");
+        }
         return true;
     }
 
