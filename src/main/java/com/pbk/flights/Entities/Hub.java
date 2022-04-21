@@ -1,10 +1,13 @@
 package com.pbk.flights.Entities;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Component
 public class Hub {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,5 +61,37 @@ public class Hub {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Set<Flight> getOutgoing() {
+        return outgoing;
+    }
+
+    public void setOutgoing(Set<Flight> outgoing) {
+        this.outgoing = outgoing;
+    }
+
+    public Set<Flight> getIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(Set<Flight> incoming) {
+        this.incoming = incoming;
     }
 }

@@ -1,17 +1,20 @@
 package com.pbk.flights.Entities;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@Component
 public class Trip {
 
     @Id
     private int id;
 
-    @OneToMany
-    @JoinColumn(name = "trip_id")
+    @ManyToMany
+    @JoinTable(name = "trip_flight",joinColumns = @JoinColumn(name = "trip_id"),inverseJoinColumns = @JoinColumn(name = "flight_id"))
     private Set<Flight> flights = new HashSet<>();
 
     @OneToOne

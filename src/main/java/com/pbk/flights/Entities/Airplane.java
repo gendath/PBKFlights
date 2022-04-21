@@ -1,11 +1,14 @@
 package com.pbk.flights.Entities;
 
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.Map;
 
 import static java.util.Map.entry;
 @Entity
+@Component
 public class Airplane {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +32,17 @@ public class Airplane {
                 entry("GW", -1), entry("GI", -1),                  entry("HW", -1), entry("HI", -1),
                 entry("IW", -1), entry("II", -1),                  entry("JW", -1), entry("JI", -1)
         );
+    }
+
+    public Airplane(String model) {
+        seats = Map.ofEntries(
+                entry("AW", -1), entry("AI", -1),                  entry("BW", -1), entry("BI", -1),
+                entry("CW", -1), entry("CI", -1),                  entry("DW", -1), entry("DI", -1),
+                entry("EW", -1), entry("EI", -1),                  entry("FW", -1), entry("FI", -1),
+                entry("GW", -1), entry("GI", -1),                  entry("HW", -1), entry("HI", -1),
+                entry("IW", -1), entry("II", -1),                  entry("JW", -1), entry("JI", -1)
+        );
+        this.model = model;
     }
 
     public Map<String, Integer> getSeats() {

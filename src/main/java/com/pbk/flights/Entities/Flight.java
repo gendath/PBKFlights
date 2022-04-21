@@ -1,9 +1,15 @@
 package com.pbk.flights.Entities;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
+@Component
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,6 +23,9 @@ public class Flight {
     @OneToOne
     private Hub destination;
 
+    @ManyToMany(mappedBy = "flights")
+    private Set<Trip> trips= new HashSet<>();
+
     private Time departure;
     private Time arrival;
 
@@ -26,6 +35,14 @@ public class Flight {
         return plane;
     }
 
+    public Flight() {
+    }
+
+    public Flight(Airplane plane, Hub origin, Hub destination) {
+        this.plane = plane;
+        this.origin = origin;
+        this.destination = destination;
+    }
 
     public Double getTripTime() {
         //returns time in hours
@@ -97,5 +114,18 @@ public class Flight {
     @Override
     public int hashCode() {
         return flightId != null ? flightId.hashCode() : 0;
+    }
+    public static Flight createFlight(Airplane plane, Hub origin, Hub destination, Time departure, Time arrival, BigDecimal price){
+
+        Flight flight = new Flight(plane,origin,destination);
+        flight.setDeparture(departure);
+        flight.setArrival(arrival);
+        flight.setPrice(price);
+        flight.getOrigin().getOutgoing().add(flight);
+        flight.getDestination().getIncoming().add(flight);
+        return flight;
+
+
+
     }
 }
