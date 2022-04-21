@@ -5,6 +5,8 @@
    ========================================================================== */
 
 
+.body{color:red;}
+table.th {color:red;}
 
 #brand {
     font-weight: bold;
@@ -39,7 +41,9 @@
     color: #003a70;
 }
 
-
+body {
+  background-color: #E6E6FA;
+}
 
 
 

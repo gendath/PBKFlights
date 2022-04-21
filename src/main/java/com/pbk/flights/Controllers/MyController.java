@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,34 +55,54 @@ public class MyController {
     //Users
 
     @GetMapping("/users")
-    public List<User> getUsers(){
-        return this.userServices.getUsers();
+    public List<User> getUsers(HttpServletRequest request){
+        if (request.getSession().getAttribute("authority").equals("admin"))
+            return this.userServices.getUsers();
+        return new ArrayList<>();
     }
 
 // Need to send an integer as ID
     @GetMapping("/users/{userID}")
-    public User getUser(@PathVariable String userID){
-        return this.userServices.getUser(Integer.parseInt(userID));
+    public User getUser(@PathVariable String userID, HttpServletRequest request){
+        if (request.getSession().getAttribute("authority").equals("admin"))
+            return this.userServices.getUser(Integer.parseInt(userID));
+        return null;
     }
 
-
-    @PostMapping("/users")
-    public boolean addUser(@RequestBody User user){
-        return this.userServices.addUser(user);
+    @PostMapping("/signup")
+    public boolean addUser(@RequestBody User user, HttpServletRequest req) {
+        return this.userServices.addUser(user, req);
     }
 
     @PutMapping("/users")
-    public boolean updateUser(@RequestBody User user){
-        return this.userServices.updateUser(user);
+    public boolean updateUser(@RequestBody User user, HttpServletRequest request){
+        if (request.getSession().getAttribute("authority").equals("admin") ||
+                request.getSession().getAttribute("userid").equals(String.valueOf(user.getUserId())))
+            return this.userServices.updateUser(user);
+        return false;
     }
 
     @DeleteMapping("/users/{userID}")
-    public String removeUser(@PathVariable String userID){
-        //return String.valueOf(this.userServices(Integer.parseInt(userID)));
-        return String.valueOf(this.userServices.getUser(Integer.parseInt(userID)));
+    public String removeUser(@PathVariable String userID, HttpServletRequest request){
+        if (request.getSession().getAttribute("authority").equals("admin"))
+            return String.valueOf(this.userServices.deleteUser(Integer.parseInt(userID)));
+        return "Unauthorized to delete";
     }
 
+    @GetMapping("/login/{username}/{password}")
+    public String signin(@PathVariable String username, @PathVariable String password, HttpServletRequest req) {
+        User u = new User();
+        u.setEmail(username);
+        u.setPassword(password);
+        if (this.userServices.login(u, req))
+            return "Login successful";
+        else return "Login failed";
+    }
 
-
+    @GetMapping("/signout")
+    public void signout(HttpServletRequest req) {
+        this.userServices.logout(req);
+        // TODO: redirect to home
+    }
 
 }
