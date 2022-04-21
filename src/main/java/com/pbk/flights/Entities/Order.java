@@ -1,5 +1,7 @@
 package com.pbk.flights.Entities;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -7,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
+@Component
 public class Order {
 
     @Id

@@ -1,6 +1,7 @@
 package com.pbk.flights.Services;
 
 import com.pbk.flights.Dao.FlightDao;
+import com.pbk.flights.Dao.HubDao;
 import com.pbk.flights.Entities.Flight;
 import com.pbk.flights.Entities.Hub;
 import com.pbk.flights.Entities.Trip;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class FlightServicesImpl implements FlightServices{
+
+    @Autowired
+    private HubDao hubDao;
 
     @Autowired
     private FlightDao flightDao;
@@ -32,7 +36,13 @@ public class FlightServicesImpl implements FlightServices{
 
     @Override
     public Flight addFlight(Flight flight) {
+        flight.getOrigin().getOutgoing().add(flight);
+        flight.getDestination().getIncoming().add(flight);
         flightDao.save(flight);
+        hubDao.save(flight.getOrigin());
+        hubDao.save(flight.getDestination());
+
+
         return flight;
     }
 
