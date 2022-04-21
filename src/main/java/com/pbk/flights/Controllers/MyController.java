@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,6 @@ public class MyController {
         return new ArrayList<>();
     }
 
-// Need to send an integer as ID
     @GetMapping("/users/{userID}")
     public User getUser(@PathVariable String userID, HttpServletRequest request){
         if (request.getSession().getAttribute("authority").equals("admin"))
@@ -70,8 +70,8 @@ public class MyController {
     }
 
     @PostMapping("/signup")
-    public boolean addUser(@RequestBody User user, HttpServletRequest req) {
-        return this.userServices.addUser(user, req);
+    public boolean addUser(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
+        return this.userServices.addUser(user, request, response);
     }
 
     @PutMapping("/users")
@@ -90,19 +90,19 @@ public class MyController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public String signin(@PathVariable String username, @PathVariable String password, HttpServletRequest req) {
+    public String signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
         User u = new User();
         u.setEmail(username);
         u.setPassword(password);
-        if (this.userServices.login(u, req))
+        if (this.userServices.login(u, request, response))
             return "Login successful";
         else return "Login failed";
     }
 
-    @GetMapping("/signout")
-    public void signout(HttpServletRequest req) {
-        this.userServices.logout(req);
-        // TODO: redirect to home
+    @RequestMapping("/signout")
+    public String signout(HttpServletRequest request) {
+        this.userServices.logout(request);
+        return "index";
     }
 
 }

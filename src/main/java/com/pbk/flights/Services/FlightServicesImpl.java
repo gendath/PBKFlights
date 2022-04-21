@@ -71,10 +71,10 @@ public class FlightServicesImpl implements FlightServices{
                 .map(Trip::new)
                 .map(trip -> {
                     while (trip.getLastFlight().getDestination() != arrival) {
-                        // TODO: Need to add time to this, at least an hour
                         var next = flights.stream()
                                 .filter(flight -> flight.getOrigin() == trip.getLastFlight().getDestination())
                                 .filter(flight -> !trip.hasVisited(flight.getDestination()))
+                                // TODO: Need to add time to this, at least an hour
                                 .filter(flight -> flight.getDeparture().after(trip.getLastFlight().getArrival()))
                                 .min(Comparator.comparingDouble(flight ->
                                         calculateDistanceMiles(flight.getDestination(), arrival)))
