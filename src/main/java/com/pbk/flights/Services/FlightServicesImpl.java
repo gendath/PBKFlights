@@ -80,7 +80,9 @@ public class FlightServicesImpl implements FlightServices{
                                         calculateDistanceMiles(flight.getDestination(), arrival)))
                                 .orElse(null);
                         if (next == null) return null;
-                        trip.addFlight(next);
+
+                        // TODO: 4/21/2022 Brian to fix seat assignment in pathfinding 
+                        trip.addFlight(next,"AW");
                     }
                     return trip;
                 })

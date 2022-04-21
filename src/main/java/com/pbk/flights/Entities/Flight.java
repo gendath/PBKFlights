@@ -13,7 +13,7 @@ import java.util.Set;
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long flightId;
+    private Integer flightId;
     @OneToOne
     private Airplane plane;
 
@@ -49,11 +49,11 @@ public class Flight {
         return Double.valueOf(arrival.getTime()-departure.getTime())/3600000;
     }
 
-    public Long getFlightId() {
+    public Integer getFlightId() {
         return flightId;
     }
 
-    public void setFlightId(Long flightId) {
+    public void setFlightId(Integer flightId) {
         this.flightId = flightId;
     }
 

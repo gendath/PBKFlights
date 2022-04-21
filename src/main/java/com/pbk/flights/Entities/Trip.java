@@ -11,17 +11,27 @@ import java.util.stream.Collectors;
 public class Trip {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @ManyToMany
     @JoinTable(name = "trip_flight",joinColumns = @JoinColumn(name = "trip_id"),inverseJoinColumns = @JoinColumn(name = "flight_id"))
     private Set<Flight> flights = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(name = "trip_seat_mapping",
+            joinColumns = {@JoinColumn(name = "trip_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "seat")
+    @Column(name = "seats")
+    private final Map<Integer, String> seats = new HashMap<>();//store seat for each leg of flight Map<FlightID, Seat>
+
     @OneToOne
     private Hub origin;
 
     @OneToOne
     private Hub destination;
+
+
 
     public Trip() {
     }
@@ -31,7 +41,8 @@ public class Trip {
     }
 
 
-    public void addFlight(Flight flight) {
+    public void addFlight(Flight flight, String seat) {
+        seats.put(flight.getFlightId(), seat);
         flights.add(flight);
     }
 
@@ -73,6 +84,40 @@ public class Trip {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Set<Flight> getFlights() {
+        return flights;
+    }
+
+
+
+    public Hub getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Hub origin) {
+        this.origin = origin;
+    }
+
+    public Hub getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Hub destination) {
+        this.destination = destination;
+    }
+
+    public Map<Integer, String> getSeats() {
+        return seats;
     }
 // TODO: 4/19/2022 price
 }

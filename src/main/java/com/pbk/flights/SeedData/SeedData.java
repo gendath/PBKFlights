@@ -1,9 +1,7 @@
 package com.pbk.flights.SeedData;
 
 import com.pbk.flights.Dao.*;
-import com.pbk.flights.Entities.Airplane;
-import com.pbk.flights.Entities.Flight;
-import com.pbk.flights.Entities.Hub;
+import com.pbk.flights.Entities.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -63,7 +61,7 @@ public class SeedData implements CommandLineRunner {
         hubDao.save(hub4);
 
 
-        Hub hub5	 = new Hub();
+        Hub hub5 = new Hub();
         hub5.setName("Boston Airport");
         hub5.setLatitude(42.36);
         hub5.setLongitude(-71.02);
@@ -84,73 +82,118 @@ public class SeedData implements CommandLineRunner {
         airplaneDao.save(a5);
 
         System.out.println("Adding Flights");
-        Time depart1 = new Time(6,0,0);
-        Time arrive1 = new Time(9,0,0);
-        Time depart2 = new Time(11,0,0);
-        Time arrive2 = new Time(14,0,0);
+        Time depart1 = new Time(6, 0, 0);
+        Time arrive1 = new Time(9, 0, 0);
+        Time depart2 = new Time(11, 0, 0);
+        Time arrive2 = new Time(14, 0, 0);
 
-        Flight flight1=Flight.createFlight(a1,hub,hub4,depart1,arrive1,BigDecimal.valueOf(325.35));
+        Flight flight1 = Flight.createFlight(a1, hub, hub4, depart1, arrive1, BigDecimal.valueOf(325.35));
         flightDao.save(flight1);
         hubDao.save(flight1.getOrigin());
         hubDao.save(flight1.getDestination());
 
 
-        Flight flight2=Flight.createFlight(a1,hub,hub4,depart2,arrive2,BigDecimal.valueOf(325.35));
+        Flight flight2 = Flight.createFlight(a1, hub4, hub, depart2, arrive2, BigDecimal.valueOf(325.35));
         flightDao.save(flight2);
         hubDao.save(flight2.getOrigin());
         hubDao.save(flight2.getDestination());
 
 
-        Flight flight3=Flight.createFlight(a2,hub,hub3,depart1,arrive1,BigDecimal.valueOf(325.35));
+        Flight flight3 = Flight.createFlight(a2, hub, hub3, depart1, arrive1, BigDecimal.valueOf(325.35));
         flightDao.save(flight3);
         hubDao.save(flight3.getOrigin());
         hubDao.save(flight3.getDestination());
 
 
-        Flight flight4=Flight.createFlight(a1,hub3,hub,depart2,arrive2,BigDecimal.valueOf(325.35));
+        Flight flight4 = Flight.createFlight(a1, hub3, hub, depart2, arrive2, BigDecimal.valueOf(325.35));
         flightDao.save(flight4);
         hubDao.save(flight4.getOrigin());
         hubDao.save(flight4.getDestination());
 
 
-        Flight flight5=Flight.createFlight(a3,hub4,hub5,depart1,arrive1,BigDecimal.valueOf(325.35));
+        Flight flight5 = Flight.createFlight(a3, hub4, hub5, depart1, arrive1, BigDecimal.valueOf(325.35));
         flightDao.save(flight5);
         hubDao.save(flight5.getOrigin());
         hubDao.save(flight5.getDestination());
 
 
-        Flight flight6=Flight.createFlight(a3,hub5,hub4,depart2,arrive2,BigDecimal.valueOf(325.35));
+        Flight flight6 = Flight.createFlight(a3, hub5, hub4, depart2, arrive2, BigDecimal.valueOf(325.35));
         flightDao.save(flight6);
         hubDao.save(flight6.getOrigin());
         hubDao.save(flight6.getDestination());
 
 
-        Flight flight7=Flight.createFlight(a4,hub5,hub2,depart1,arrive1,BigDecimal.valueOf(325.35));
+        Flight flight7 = Flight.createFlight(a4, hub5, hub2, depart1, arrive1, BigDecimal.valueOf(325.35));
         flightDao.save(flight7);
         hubDao.save(flight7.getOrigin());
         hubDao.save(flight7.getDestination());
 
 
-        Flight flight8=Flight.createFlight(a4,hub2,hub5,depart2,arrive2,BigDecimal.valueOf(325.35));
+        Flight flight8 = Flight.createFlight(a4, hub2, hub5, depart2, arrive2, BigDecimal.valueOf(325.35));
         flightDao.save(flight8);
         hubDao.save(flight8.getOrigin());
         hubDao.save(flight8.getDestination());
 
 
-
-        Flight flight9=Flight.createFlight(a5,hub2,hub3,depart1,arrive1,BigDecimal.valueOf(325.35));
+        Flight flight9 = Flight.createFlight(a5, hub2, hub3, depart1, arrive1, BigDecimal.valueOf(325.35));
         flightDao.save(flight9);
         hubDao.save(flight9.getOrigin());
         hubDao.save(flight9.getDestination());
 
 
-        Flight flight10=Flight.createFlight(a5,hub3,hub2,depart2,arrive2,BigDecimal.valueOf(325.35));
+        Flight flight10 = Flight.createFlight(a5, hub3, hub2, depart2, arrive2, BigDecimal.valueOf(325.35));
         flightDao.save(flight10);
         hubDao.save(flight10.getOrigin());
         hubDao.save(flight10.getDestination());
 
+        System.out.println("Adding Users");
+
+        User perry = new User();
+        perry.setFirstName("Perry");
+        perry.setLastName("Shelton");
+        perry.setEmail("perry.shelton@genspark.net");
+        perry.setPassword("password1");
+        userDao.save(perry);
+
+        User brian = new User();
+        brian.setFirstName("Brian");
+        brian.setLastName("Upsher");
+        brian.setEmail("brian.upsher@genspark.net");
+        brian.setPassword("password1");
+        userDao.save(brian);
+
+        User kiran = new User();
+        kiran.setFirstName("Kiran");
+        kiran.setLastName("Yeturu");
+        kiran.setEmail("kiran.yeturu@genspark.net");
+        kiran.setPassword("password1");
+        userDao.save(kiran);
+
+        System.out.println("Creating Orders and trips");
+
+        for (User user : userDao.findAll()) {
+            Order order = new Order();
+            order.setUser(user);
+            Trip trip1 = new Trip();
+            trip1.setOrigin(flight1.getOrigin());
+            trip1.addFlight(flight1, "AW");
+            trip1.setDestination(flight5.getDestination());
+            trip1.addFlight(flight5,"JW");
+            tripDao.save(trip1);
+            order.getTrips().add(trip1);
+
+            Trip trip2 = new Trip();
+            trip2.setOrigin(flight4.getOrigin());
+            trip2.addFlight(flight4,"BW");
+            trip2.setDestination(flight2.getDestination());
+            trip2.addFlight(flight2,"BI");
+            tripDao.save(trip2);
+            order.getTrips().add(trip2);
+
+            orderDao.save(order);
 
 
+        }
 
 
     }

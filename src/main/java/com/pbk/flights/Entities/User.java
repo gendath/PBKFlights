@@ -9,6 +9,8 @@ import java.util.Set;
 @Entity
 @Component
 public class User {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
@@ -16,6 +18,8 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+
+
     @OneToMany
     @JoinColumn(name = "user_id")
     private final Set<Order> bookings= new HashSet<>();
