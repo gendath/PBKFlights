@@ -15,6 +15,16 @@ public class Hub {
     private String name;
     private String location;
 
+    public Hub() {
+    }
+
+    public Hub(String name, String location, double latitude, double longitude) {
+        this.name = name;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public double getLatitude() {
         return latitude;
     }

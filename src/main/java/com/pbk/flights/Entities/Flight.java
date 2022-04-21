@@ -101,20 +101,6 @@ public class Flight {
         this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Flight flight = (Flight) o;
-
-        return flightId != null ? flightId.equals(flight.flightId) : flight.flightId == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return flightId != null ? flightId.hashCode() : 0;
-    }
     public static Flight createFlight(Airplane plane, Hub origin, Hub destination, Time departure, Time arrival, BigDecimal price){
 
         Flight flight = new Flight(plane,origin,destination);
