@@ -5,8 +5,6 @@ import com.pbk.flights.Entities.User;
 import com.pbk.flights.Services.FlightServices;
 import com.pbk.flights.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 public class MyController {
 
     @Autowired
@@ -22,15 +20,12 @@ public class MyController {
     @Autowired
     private UserServices userServices;
 
-//    @GetMapping("/flights")
-//    public List<Flight> getAllFlight(){
-//        return this.flightService.getAllFlights();
-//    }
-    @RequestMapping("/flights")
-    public String getAllFlight(Model model){
-        model.addAttribute("flights", flightService.getAllFlights());
-        return "flights/list";
+    @GetMapping("/flights")
+    public List<Flight> getAllFlight(){
+        System.out.println("Serving Flights");
+        return this.flightService.getAllFlights();
     }
+
 
     @GetMapping("/flights/{flightID}")
     public Flight getFlight(@PathVariable String flightID){
