@@ -115,7 +115,7 @@ public class MyController {
 
     @DeleteMapping("/test/delete/{userEmail}")
     public String removeUserByEmail(@PathVariable String userEmail, HttpServletRequest request) {
-        if (!"admin".equals(request.getSession().getAttribute("authority")))
+        if ("admin".equals(request.getSession().getAttribute("authority")))
             return String.valueOf(this.userServices.deleteUserByEmail(userEmail));
         return "Unauthorized to delete";
     }
