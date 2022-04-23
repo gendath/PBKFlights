@@ -1,5 +1,6 @@
 package com.pbk.flights.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -52,10 +53,12 @@ public class Hub {
 
     @OneToMany
     @JoinColumn(name = "hub_id")
+    @JsonIgnore
     private Set<Flight> outgoing = new HashSet<>();
 
     @OneToMany
     @JoinColumn(name = "hub_id")
+    @JsonIgnore
     private Set<Flight> incoming = new HashSet<>();
 
     @Override

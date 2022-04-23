@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Controller
+@RestController
 public class MyController {
 
     @Autowired
@@ -30,11 +30,10 @@ public class MyController {
     @Autowired
     private AirplaneServices airplaneServices;
 
-
-    @RequestMapping("/flights")
-    public String getAllFlight(Model model){
-        model.addAttribute("flights", flightService.getAllFlights());
-        return "flights/list";
+    @GetMapping("/flights")
+    public List<Flight> getAllFlight(){
+        System.out.println("Serving Flights");
+        return this.flightService.getAllFlights();
     }
 
     @GetMapping("/flights/{flightID}")
@@ -94,13 +93,14 @@ public class MyController {
         return "Unauthorized to delete";
     }
 
-    @RequestMapping("/login/{username}/{password}")
+    @GetMapping("/login/{username}/{password}")
     public String signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
         User u = new User();
         u.setEmail(username);
         u.setPassword(password);
-        this.userServices.login(u, request, response);
-        return "index";
+        if (this.userServices.login(u, request, response))
+            return "Login successful";
+        else return "Login failed";
     }
 
     @RequestMapping("/signout")
