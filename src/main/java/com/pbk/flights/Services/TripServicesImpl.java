@@ -3,9 +3,11 @@ package com.pbk.flights.Services;
 import com.pbk.flights.Dao.TripDao;
 import com.pbk.flights.Entities.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TripServicesImpl implements TripServices {
 
     @Autowired

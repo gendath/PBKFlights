@@ -153,6 +153,7 @@ public class SeedData implements CommandLineRunner {
         perry.setLastName("Shelton");
         perry.setEmail("perry.shelton@genspark.net");
         perry.setPassword("password1");
+        perry.setAuthority("admin");
         userDao.save(perry);
 
         User brian = new User();
@@ -160,6 +161,7 @@ public class SeedData implements CommandLineRunner {
         brian.setLastName("Upsher");
         brian.setEmail("brian.upsher@genspark.net");
         brian.setPassword("password1");
+        brian.setAuthority("user");
         userDao.save(brian);
 
         User kiran = new User();
@@ -167,6 +169,7 @@ public class SeedData implements CommandLineRunner {
         kiran.setLastName("Yeturu");
         kiran.setEmail("kiran.yeturu@genspark.net");
         kiran.setPassword("password1");
+        kiran.setAuthority("admin");
         userDao.save(kiran);
 
         System.out.println("Creating Orders and trips");

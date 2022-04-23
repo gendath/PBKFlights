@@ -4,11 +4,13 @@ import com.pbk.flights.Dao.HubDao;
 import com.pbk.flights.Entities.Flight;
 import com.pbk.flights.Entities.Hub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class HubServicesImpl implements HubServices {
 
     @Autowired

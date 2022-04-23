@@ -18,7 +18,7 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public boolean addUser(User user, HttpServletRequest request, HttpServletResponse response) {     // This is Sign Up function
-        if (userDao.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
+        if (userDao.findAll().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(user.getEmail()))) {
             System.out.println("A user with this email already exists");
             return false;
         }
@@ -29,7 +29,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public boolean login(User user, HttpServletRequest request, HttpServletResponse response) {
         User current = userDao.findAll().stream()
-                .filter(u-> u.getEmail().equals(user.getEmail()))
+                .filter(u-> u.getEmail().equalsIgnoreCase(user.getEmail()))
                 .filter(u-> u.getPassword().equals(user.getPassword()))
                 .findFirst().orElse(null);
         if (current == null) {
@@ -43,7 +43,7 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("username", current.getEmail());
         request.getSession().setAttribute("firstName", current.getFirstName());
         request.getSession().setAttribute("lastName", current.getLastName());
-        request.getSession().setAttribute("authority", "user");
+        request.getSession().setAttribute("authority", current.getAuthority());
         try {
             request.authenticate(response);
         } catch (Exception e) {

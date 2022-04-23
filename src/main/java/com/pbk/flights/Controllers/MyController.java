@@ -21,13 +21,13 @@ public class MyController {
     private FlightServices flightService;
     @Autowired
     private UserServices userServices;
-//    @Autowired
+    @Autowired
     private HubServices hubServices;
-//    @Autowired
+    @Autowired
     private OrderServices orderServices;
-//    @Autowired
+    @Autowired
     private TripServices tripServices;
-//    @Autowired
+    @Autowired
     private AirplaneServices airplaneServices;
 
 

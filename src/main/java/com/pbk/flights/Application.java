@@ -22,7 +22,7 @@ public class Application extends WebSecurityConfigurerAdapter {
 		// @formatter:off
 		http
 				.authorizeRequests(a -> a
-						.antMatchers("/", "/h2-console", "/flights", "/error", "/webjars/**").permitAll()
+						.antMatchers("/", "/flights", "/error", "/webjars/**").permitAll()
 						.anyRequest().authenticated()
 				)
 				.logout(l -> l
