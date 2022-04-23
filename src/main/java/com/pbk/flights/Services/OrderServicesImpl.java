@@ -3,10 +3,12 @@ package com.pbk.flights.Services;
 import com.pbk.flights.Dao.OrderDao;
 import com.pbk.flights.Entities.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class OrderServicesImpl implements OrderServices {
 
     @Autowired

@@ -18,6 +18,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    private String authority;
 
 
     @OneToMany
@@ -81,5 +82,13 @@ public class User {
 
     public Set<Order> getBookings() {
         return bookings;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    public String getAuthority() {
+        return authority;
     }
 }

@@ -32,7 +32,7 @@
             <a id="brand" class="navbar-brand" href="#">PBK Flights</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" role="form">
+            <form class="navbar-form navbar-right unauthenticated" role="form">   <!-- this is where it should call back to login -->
                 <div class="form-group">
                     <input type="text" placeholder="Email" class="form-control">
                 </div>
@@ -42,6 +42,13 @@
                 <button type="submit" class="btn btn-success">Sign in</button>
                 <button class="btn btn-primary">Register</button>
             </form>
+
+            <div class="navbar-form navbar-right authenticated" style="display:none">
+                Logged in as: <span id="user"></span>
+                <div>
+                    <button class="btn btn-success">Logout</button>
+                </div>
+            </div>
 
         </div><!--/.navbar-collapse -->
     </div>

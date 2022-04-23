@@ -43,7 +43,7 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("username", current.getEmail());
         request.getSession().setAttribute("firstName", current.getFirstName());
         request.getSession().setAttribute("lastName", current.getLastName());
-        request.getSession().setAttribute("authority", "user");
+        request.getSession().setAttribute("authority", current.getAuthority());
         try {
             request.authenticate(response);
         } catch (Exception e) {
