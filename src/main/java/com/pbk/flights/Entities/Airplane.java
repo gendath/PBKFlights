@@ -4,7 +4,10 @@ package com.pbk.flights.Entities;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Map.entry;
 @Entity
@@ -45,6 +48,10 @@ public class Airplane {
         this.model = model;
     }
 
+    public Airplane(int rows, int seatsPerRow) {
+        seats = generateSeats(rows, seatsPerRow);
+    }
+
     public Map<String, Integer> getSeats() {
         return seats;
     }
@@ -55,6 +62,32 @@ public class Airplane {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public Map<String, Integer> generateSeats(int rows, int seatsPerRow) {
+        Map<String, Integer> seatMap = new HashMap<>();
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 0; j < seatsPerRow; j++) {
+                String s = "" + i + ((char) ("A".getBytes()[0]+j));
+                seatMap.put(s, -1);
+            }
+        }
+
+        return seatMap;
+    }
+
+    public List<String> getAvailableSeats() {
+        return seats.entrySet().parallelStream()
+                .filter(e -> e.getValue() == -1)
+                .map(Map.Entry::getKey)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public boolean updateSeat(String seat, int userID) {
+        if (!getAvailableSeats().contains(seat)) return false;
+        seats.put(seat, userID);
+        return true;
     }
 
     @Override

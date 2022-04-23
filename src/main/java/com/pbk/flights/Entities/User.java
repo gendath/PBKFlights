@@ -4,12 +4,12 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Component
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,10 +20,22 @@ public class User {
     private String password;
     private String authority;
 
-
     @OneToMany
     @JoinColumn(name = "user_id")
     private final Set<Order> bookings= new HashSet<>();
+
+
+    public User() {
+        authority = "user";
+    }
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        authority = "user";
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -32,7 +44,7 @@ public class User {
 
         User user = (User) o;
 
-        return userId != null ? userId.equals(user.userId) : user.userId == null;
+        return Objects.equals(userId, user.userId);
     }
 
     @Override

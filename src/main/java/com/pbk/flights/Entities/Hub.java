@@ -15,15 +15,19 @@ public class Hub {
     private int id;
     private String name;
     private String location;
+    private double latitude;
+    private double longitude;
+    private String FAACode;
 
     public Hub() {
     }
 
-    public Hub(String name, String location, double latitude, double longitude) {
+    public Hub(String name, String location, double latitude, double longitude, String FAACode) {
         this.name = name;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.FAACode = FAACode;
     }
 
     public double getLatitude() {
@@ -46,10 +50,6 @@ public class Hub {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
-    private double latitude;
-
-    private double longitude;
 
     @OneToMany
     @JoinColumn(name = "hub_id")
@@ -106,5 +106,13 @@ public class Hub {
 
     public void setIncoming(Set<Flight> incoming) {
         this.incoming = incoming;
+    }
+
+    public String getFAACode() {
+        return FAACode;
+    }
+
+    public void setFAACode(String code) {
+        this.FAACode = code;
     }
 }

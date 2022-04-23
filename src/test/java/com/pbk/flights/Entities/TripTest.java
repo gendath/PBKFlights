@@ -22,10 +22,10 @@ class TripTest {
         trip=new Trip();
 
 
-        origin = new Hub("Origin 1","somewhere",39.18,-76.67);
+        origin = new Hub("Origin 1","somewhere",39.18,-76.67,"SMW");
 
-        destination = new Hub("Destination 2","somewhere",32.89,-97.04);
-        layover = new Hub("Layover","somewhere",36.78,-119.72);
+        destination = new Hub("Destination 2","somewhere",32.89,-97.04, "SM2");
+        layover = new Hub("Layover","somewhere",36.78,-119.72, "LYO");
 
         flight1 = Flight.createFlight(new Airplane("XL"), origin,layover,new Time(6,0,0),new Time(9,0,0), BigDecimal.valueOf(335));
         flight2 = Flight.createFlight(new Airplane("XL"),layover,destination,new Time(11,0,0),new Time(14,0,0), BigDecimal.valueOf(335));

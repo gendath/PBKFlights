@@ -31,41 +31,25 @@ public class SeedData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("adding hubs");
-        Hub hub = new Hub();
-        hub.setName("Baltimore Airport");
-        hub.setLatitude(39.18);
-        hub.setLongitude(-76.67);
-        hub.setLocation("Baltimore, MD");
-
+        Hub hub = new Hub("Baltimore Airport", "Baltimore, MD",
+                39.18, -76.67, "BWI");
         hubDao.save(hub);
 
-        Hub hub2 = new Hub();
-        hub2.setName("Fresno Airport");
-        hub2.setLatitude(36.77);
-        hub2.setLongitude(-119.72);
-        hub2.setLocation("Fresno, CA");
+        Hub hub2 = new Hub("Fresno Airport", "Fresno, CA",
+                36.77, -119.72, "FAT");
         hubDao.save(hub2);
 
-        Hub hub3 = new Hub();
-        hub3.setName("Detroit Airport");
-        hub3.setLatitude(42.22);
-        hub3.setLongitude(-83.36);
-        hub3.setLocation("Detroit, MI");
+        Hub hub3 = new Hub("Detroit Airport", "Detroit, MI",
+                42.22, -83.36, "DTW");
         hubDao.save(hub3);
 
-        Hub hub4 = new Hub();
-        hub4.setName("Las Vegas Airport");
-        hub4.setLatitude(36.09);
-        hub4.setLongitude(-115.14);
-        hub4.setLocation("Las Vegas. NV");
+        Hub hub4 = new Hub("Las Vegas Airport", "Las Vegas. NV",
+                36.09, -115.14, "LAS");
         hubDao.save(hub4);
 
 
-        Hub hub5 = new Hub();
-        hub5.setName("Boston Airport");
-        hub5.setLatitude(42.36);
-        hub5.setLongitude(-71.02);
-        hub5.setLocation("Boston, MA");
+        Hub hub5 = new Hub("Boston Airport", "Boston, MA",
+                42.36, -71.02, "BOS");
         hubDao.save(hub5);
 
         System.out.println("adding Airplanes");
@@ -148,25 +132,18 @@ public class SeedData implements CommandLineRunner {
 
         System.out.println("Adding Users");
 
-        User perry = new User();
-        perry.setFirstName("Perry");
-        perry.setLastName("Shelton");
-        perry.setEmail("perry.shelton@genspark.net");
-        perry.setPassword("password1");
+        User perry = new User("Perry", "Shelton",
+                "perry.shelton@genspark.net", "password1");
+        perry.setAuthority("admin");
         userDao.save(perry);
 
-        User brian = new User();
-        brian.setFirstName("Brian");
-        brian.setLastName("Upsher");
-        brian.setEmail("brian.upsher@genspark.net");
-        brian.setPassword("password1");
+        User brian = new User("Brian", "Upsher",
+                "brian.upsher@genspark.net", "password1");
         userDao.save(brian);
 
-        User kiran = new User();
-        kiran.setFirstName("Kiran");
-        kiran.setLastName("Yeturu");
-        kiran.setEmail("kiran.yeturu@genspark.net");
-        kiran.setPassword("password1");
+        User kiran = new User("Kiran", "Yeturu",
+                "kiran.yeturu@genspark.net", "password1");
+        kiran.setAuthority("admin");
         userDao.save(kiran);
 
         System.out.println("Creating Orders and trips");

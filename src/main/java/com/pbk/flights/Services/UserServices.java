@@ -8,10 +8,12 @@ import java.util.List;
 
 public interface UserServices {
     boolean login(User user, HttpServletRequest request, HttpServletResponse response);
-    boolean logout(HttpServletRequest request);
+    boolean logout(HttpServletRequest request, HttpServletResponse response);
     List<User> getUsers();
+    User getUser(int userID);
     boolean addUser(User user, HttpServletRequest request, HttpServletResponse response);
     boolean updateUser(User user);
     boolean deleteUser(int ID);
-    User getUser(int parseInt);
+    boolean deleteUserByEmail(String userEmail);
+    void getStatus(HttpServletRequest request, HttpServletResponse response);
 }

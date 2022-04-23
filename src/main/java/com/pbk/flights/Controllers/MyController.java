@@ -15,16 +15,22 @@ import java.util.Set;
 @RestController
 public class MyController {
 
+    @SuppressWarnings("unused")
     @Autowired
     private FlightServices flightService;
+    @SuppressWarnings("unused")
     @Autowired
     private UserServices userServices;
+    @SuppressWarnings("unused")
     @Autowired
     private HubServices hubServices;
+    @SuppressWarnings("unused")
     @Autowired
     private OrderServices orderServices;
+    @SuppressWarnings("unused")
     @Autowired
     private TripServices tripServices;
+    @SuppressWarnings("unused")
     @Autowired
     private AirplaneServices airplaneServices;
 
@@ -73,8 +79,8 @@ public class MyController {
     }
 
     @PostMapping("/signup")
-    public boolean addUser(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
-        return this.userServices.addUser(user, request, response);
+    public void addUser(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
+        this.userServices.addUser(user, request, response);
     }
 
     @PutMapping("/users")
@@ -93,21 +99,36 @@ public class MyController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public String signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
+    public void signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
         User u = new User();
         u.setEmail(username);
         u.setPassword(password);
-        if (this.userServices.login(u, request, response))
-            return "Login successful";
-        else return "Login failed";
+        this.userServices.login(u, request, response);
     }
 
-    @RequestMapping("/signout")
-    public String signout(HttpServletRequest request) {
-        this.userServices.logout(request);
-        return "index";
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        this.userServices.logout(request, response);
     }
 
+    // Convenience functions for testing, will be removed
+
+    @DeleteMapping("/test/delete/{userEmail}")
+    public String removeUserByEmail(@PathVariable String userEmail, HttpServletRequest request) {
+        if (!"admin".equals(request.getSession().getAttribute("authority")))
+            return String.valueOf(this.userServices.deleteUserByEmail(userEmail));
+        return "Unauthorized to delete";
+    }
+
+    @GetMapping("/test/status")
+    public void getUserStatus(HttpServletRequest request, HttpServletResponse response) {
+        userServices.getStatus(request, response);
+    }
+
+    @GetMapping("/test/routing/{departure}/{arrival}")
+    public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
+        return flightService.getRoutes(departure, arrival);
+    }
 
     // Hubs
 

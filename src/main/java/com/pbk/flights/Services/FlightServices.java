@@ -1,7 +1,6 @@
 package com.pbk.flights.Services;
 
 import com.pbk.flights.Entities.Flight;
-import com.pbk.flights.Entities.Hub;
 import com.pbk.flights.Entities.Trip;
 
 import java.util.List;
@@ -12,5 +11,5 @@ public interface FlightServices {
     Flight addFlight(Flight flight);
     boolean updateFlight(Flight flight);
     boolean removeFlight(int flightID);
-    List<Trip> getRoutes(Hub departure, Hub arrival);
+    List<Trip> getRoutes(String departure, String arrival);
 }

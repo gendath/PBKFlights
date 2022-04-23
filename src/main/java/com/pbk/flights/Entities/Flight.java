@@ -111,7 +111,18 @@ public class Flight {
         flight.getDestination().getIncoming().add(flight);
         return flight;
 
+    }
 
-
+    public static double calculateDistanceMiles(Hub hub1, Hub hub2) {       // Haversine formula
+        if (hub1 == null || hub2 == null) return -1d;
+        if (hub1.getLatitude() == hub2.getLatitude() &&
+                hub1.getLongitude() == hub2.getLongitude()) return 0;
+        double theta = hub1.getLongitude() - hub2.getLongitude();
+        double dist = Math.sin(Math.toRadians(hub1.getLatitude())) * Math.sin(Math.toRadians(hub2.getLatitude())) +
+                Math.cos(Math.toRadians(hub1.getLatitude())) * Math.cos(Math.toRadians(hub2.getLatitude())) *
+                        Math.cos(Math.toRadians(theta));
+        dist = Math.toDegrees(Math.acos(dist));
+        dist = dist * 60 * 1.1515;
+        return dist;
     }
 }

@@ -5,9 +5,10 @@ import com.pbk.flights.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Service
@@ -18,26 +19,39 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public boolean addUser(User user, HttpServletRequest request, HttpServletResponse response) {     // This is Sign Up function
-        if (userDao.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
-            System.out.println("A user with this email already exists");
+        PrintWriter writer;
+        try {
+            writer = response.getWriter();
+        } catch (IOException e) {
+            writer = new PrintWriter(System.out);
+        }
+        user.setEmail(user.getEmail().toLowerCase());       // To avoid case sensitivity always ensure email is lowercase
+        if (!userDao.findByEmailIgnoreCase(user.getEmail()).isEmpty()) {
+            writer.println("A user with this email already exists");
             return false;
         }
+        // TODO: Make a post request to do this instead
         login(userDao.save(user), request, response);
+        writer.printf("User %s %s created successfully%n", user.getFirstName(), user.getLastName());
         return true;
     }
 
     @Override
     public boolean login(User user, HttpServletRequest request, HttpServletResponse response) {
-        User current = userDao.findAll().stream()
-                .filter(u-> u.getEmail().equals(user.getEmail()))
-                .filter(u-> u.getPassword().equals(user.getPassword()))
-                .findFirst().orElse(null);
-        if (current == null) {
-            System.out.println("Invalid username or password");
+        var users = userDao.findByEmailIgnoreCaseAndPassword(user.getEmail(), user.getPassword());
+        PrintWriter writer;
+        try {
+            writer = response.getWriter();
+        } catch (IOException e) {
+            writer = new PrintWriter(System.out);
+        }
+        if (users.isEmpty()) {
+            writer.println("Invalid username or password");
 
-            logout(request);
+            logout(request, response);
             return false;
         }
+        var current = users.get(0);
 
         request.getSession().setAttribute("userid", current.getUserId());
         request.getSession().setAttribute("username", current.getEmail());
@@ -46,8 +60,9 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("authority", current.getAuthority());
         try {
             request.authenticate(response);
+            writer.printf("%s successfully logged in as %n", current.getFirstName());
         } catch (Exception e) {
-            System.out.println("Could not authenticate user");
+            writer.println("Could not authenticate user");
         }
         return true;
     }
@@ -55,7 +70,7 @@ public class UserServicesImpl implements UserServices {
     // TODO: add OAuth login method
 
     @Override
-    public boolean logout(HttpServletRequest request) {
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.getSession().setAttribute("userid", "");
             request.getSession().setAttribute("username", "");
@@ -64,8 +79,10 @@ public class UserServicesImpl implements UserServices {
             request.getSession().setAttribute("authority", "");
             request.logout();
             request.getSession().invalidate();
+            PrintWriter writer = response.getWriter();
+            writer.println("Successfully logged out");
             return true;
-        } catch (ServletException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -92,5 +109,27 @@ public class UserServicesImpl implements UserServices {
     public boolean deleteUser(int ID) {
         userDao.deleteById(ID);
         return true;
+    }
+
+    @Override
+    public boolean deleteUserByEmail(String userEmail) {
+        var users = userDao.findByEmailIgnoreCase(userEmail.toLowerCase());
+        if (users.isEmpty()) return false;
+        userDao.delete(users.get(0));
+        return true;
+    }
+
+    // :::TESTING:::  Delete after
+    @Override
+    public void getStatus(HttpServletRequest request, HttpServletResponse response){
+        try {
+            PrintWriter writer = response.getWriter();
+            writer.println(request.getSession().getAttribute("userid"));
+            writer.println(request.getSession().getAttribute("username"));
+            writer.println(request.getSession().getAttribute("firstName"));
+            writer.println(request.getSession().getAttribute("lastName"));
+            writer.println(request.getSession().getAttribute("authority"));
+        } catch (Exception e) {
+        }
     }
 }

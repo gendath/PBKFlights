@@ -16,7 +16,7 @@ public class Trip {
 
     @ManyToMany
     @JoinTable(name = "trip_flight",joinColumns = @JoinColumn(name = "trip_id"),inverseJoinColumns = @JoinColumn(name = "flight_id"))
-    private Set<Flight> flights = new HashSet<>();
+    private final Set<Flight> flights = new LinkedHashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "trip_seat_mapping",
@@ -46,6 +46,12 @@ public class Trip {
         flights.add(flight);
     }
 
+    public boolean updateSeat(Flight flight, String seat, int userID) {
+        if (!flight.getPlane().updateSeat(seat, userID)) return false;
+        seats.put(flight.getFlightId(), seat);
+        return true;
+    }
+
     public double getTravelTime() {
         Optional<Double> op = flights.stream()
                 .map(Flight::getTripTime)
@@ -58,11 +64,9 @@ public class Trip {
 
     public Flight getLastFlight() {
         if (flights.isEmpty()) return null;
-        var sorted = flights.stream()
-                .sorted(Comparator.comparing(Flight::getDeparture))
-                .collect(Collectors.toList());
-        if (sorted.isEmpty()) return null;
-        return sorted.get(sorted.size()-1);
+        Flight result = null;
+        for (var f : flights) result = f;
+        return result;
     }
 
     public boolean hasVisited(Hub hub) {
@@ -120,4 +124,27 @@ public class Trip {
         return seats;
     }
 // TODO: 4/19/2022 price
+
+
+    public Trip findRoute(List<Flight> availableFlights, Hub arrival) {
+        if (getLastFlight() == null) return null;
+        while (getLastFlight().getDestination() != arrival) {
+            var temp = availableFlights.stream()
+                    .filter(flight -> flight.getOrigin() == getLastFlight().getDestination())
+                    .collect(Collectors.toList());
+            var next = temp.stream()
+                    .filter(flight -> !hasVisited(flight.getDestination()))
+                    // TODO: Need to add time to this, at least an hour
+                    // TODO: this filter should be a sort method instead
+//                  .filter(flight -> flight.getDeparture().after(trip.getLastFlight().getArrival()))
+                    .min(Comparator.comparingDouble(flight ->
+                            Flight.calculateDistanceMiles(flight.getDestination(), arrival)))
+                    .orElse(null);
+            if (next == null) return null;
+
+            addFlight(next,null);
+        }
+        return this;
+    }
+
 }
