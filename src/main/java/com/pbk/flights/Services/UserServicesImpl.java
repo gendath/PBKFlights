@@ -37,21 +37,24 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public boolean login(User user, HttpServletRequest request, HttpServletResponse response) {
+    public User login(User user, HttpServletRequest request, HttpServletResponse response) {
         var users = userDao.findByEmailIgnoreCaseAndPassword(user.getEmail(), user.getPassword());
-        PrintWriter writer;
-        try {
-            writer = response.getWriter();
-        } catch (IOException e) {
-            writer = new PrintWriter(System.out);
-        }
-        if (users.isEmpty()) {
-            writer.println("Invalid username or password");
-
-            logout(request, response);
-            return false;
-        }
+//        PrintWriter writer;
+//        try {
+//            writer = response.getWriter();
+//        } catch (IOException e) {
+//            writer = new PrintWriter(System.out);
+//        }
+//        if (users.isEmpty()) {
+//            writer.println("Invalid username or password");
+//
+//            logout(request, response);
+//            return null;
+//        }
         var current = users.get(0);
+        if(request.getSession().getAttribute("userid")==current.getUserId()){
+            return current;
+        }
 
         request.getSession().setAttribute("userid", current.getUserId());
         request.getSession().setAttribute("username", current.getEmail());
@@ -60,11 +63,11 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("authority", current.getAuthority());
         try {
             request.authenticate(response);
-            writer.printf("%s successfully logged in as %n", current.getFirstName());
+//            writer.printf("%s successfully logged in as %n", current.getFirstName());
         } catch (Exception e) {
-            writer.println("Could not authenticate user");
+//            writer.println("Could not authenticate user");
         }
-        return true;
+        return current;
     }
 
     // TODO: add OAuth login method

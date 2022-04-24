@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +65,7 @@ public class MyController {
 
     @GetMapping("/users")
     public List<User> getUsers(HttpServletRequest request){
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("admin"))
             return this.userServices.getUsers();
         return new ArrayList<>();
     }
@@ -99,11 +98,11 @@ public class MyController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public void signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
+    public User signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
         User u = new User();
         u.setEmail(username);
         u.setPassword(password);
-        this.userServices.login(u, request, response);
+        return this.userServices.login(u, request, response);
     }
 
     @GetMapping("/logout")
@@ -134,15 +133,15 @@ public class MyController {
 
     @GetMapping("/hubs")
     public List<Hub> getAllHubs(HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (request.getSession().getAttribute("authority").equals("admin"))
             return hubServices.getAllHubs();
-        return new ArrayList<>();
+//        return new ArrayList<>();
     }
     @GetMapping("/hubs/{hubID}")
     public Hub getHub(@PathVariable String hubID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (request.getSession().getAttribute("authority").equals("admin"))
             return hubServices.getHubByID(Integer.parseInt(hubID));
-        return null;
+//        return null;
     }
     @PostMapping("/hubs")
     public Hub addHub(@RequestBody Hub hub, HttpServletRequest request) {
@@ -164,29 +163,32 @@ public class MyController {
     }
     @GetMapping("/hubs/out/{hubID}")
     public Set<Flight> getHubOutboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (request.getSession().getAttribute("authority").equals("admin"))
             return hubServices.getOutgoingFlights(Integer.parseInt(hubID));
-        return new HashSet<>();
+//        return new HashSet<>();
     }
     @GetMapping("/hubs/in/{hubID}")
     public Set<Flight> getHubInboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (request.getSession().getAttribute("authority").equals("admin"))
             return hubServices.getIncomingFlights(Integer.parseInt(hubID));
-        return new HashSet<>();
+//        return new HashSet<>();
     }
     // orders
     @GetMapping("/orders")
     public List<Order> getAllOrders(HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("admin"))
             return orderServices.getAllOrders();
-        if (request.getSession().getAttribute("authority").equals("user"))
+        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("user"))
             return orderServices.getAllOrdersFromUser(Integer.parseInt(
                     request.getSession().getAttribute("userid").toString()));
         return new ArrayList<>();
     }
     @GetMapping("/orders/{orderID}")
     public Order getOrder(@PathVariable String orderID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (request.getSession().getAttribute("authority") !=null
+                && (request.getSession().getAttribute("authority").equals("admin"))
+        ||request.getSession().getAttribute("authority").equals("user"))
+
             return orderServices.getOrderByID(Integer.parseInt(orderID));
         return null;
     }
