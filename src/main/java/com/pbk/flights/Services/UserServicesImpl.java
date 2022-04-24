@@ -51,8 +51,13 @@ public class UserServicesImpl implements UserServices {
 //            logout(request, response);
 //            return null;
 //        }
-        var current = users.get(0);
+        var current = new User();
+                current.setUserId(users.get(0).getUserId());
+                current.setEmail(users.get(0).getEmail());
+                current.setFirstName(users.get(0).getFirstName());
+                current.setLastName(users.get(0).getLastName());
         if(request.getSession().getAttribute("userid")==current.getUserId()){
+
             return current;
         }
 
