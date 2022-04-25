@@ -125,8 +125,8 @@ public class MyController {
     }
 
     @GetMapping("/test/routing/{departure}/{arrival}")
-    public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
-        return flightService.getRoutes(departure, arrival);
+    public Trip getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
+        return flightService.getRoutes(departure, arrival).get(0);
     }
 
     // Hubs
@@ -213,9 +213,9 @@ public class MyController {
     // Trip
     @GetMapping("/trips")
     public List<Trip> getAllTrips(HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (request.getSession().getAttribute("authority").equals("admin"))
             return tripServices.getAllTrips();
-        return new ArrayList<>();
+//        return new ArrayList<>();
     }
     @GetMapping("/trips/{orderID}")
     public Trip getTrip(@PathVariable String tripID, HttpServletRequest request) {
