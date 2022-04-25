@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,14 +66,14 @@ public class MyController {
 
     @GetMapping("/users")
     public List<User> getUsers(HttpServletRequest request){
-        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return this.userServices.getUsers();
         return new ArrayList<>();
     }
 
     @GetMapping("/users/{userID}")
     public User getUser(@PathVariable String userID, HttpServletRequest request){
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return this.userServices.getUser(Integer.parseInt(userID));
         return null;
     }
@@ -84,7 +85,7 @@ public class MyController {
 
     @PutMapping("/users")
     public boolean updateUser(@RequestBody User user, HttpServletRequest request){
-        if (request.getSession().getAttribute("authority").equals("admin") ||
+        if (isUserAdmin(request) ||
                 request.getSession().getAttribute("userid").equals(String.valueOf(user.getUserId())))
             return this.userServices.updateUser(user);
         return false;
@@ -92,7 +93,7 @@ public class MyController {
 
     @DeleteMapping("/users/{userID}")
     public String removeUser(@PathVariable String userID, HttpServletRequest request){
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return String.valueOf(this.userServices.deleteUser(Integer.parseInt(userID)));
         return "Unauthorized to delete";
     }
@@ -133,144 +134,160 @@ public class MyController {
 
     @GetMapping("/hubs")
     public List<Hub> getAllHubs(HttpServletRequest request) {
-//        if (request.getSession().getAttribute("authority").equals("admin"))
-            return hubServices.getAllHubs();
-//        return new ArrayList<>();
+        return hubServices.getAllHubs();
     }
     @GetMapping("/hubs/{hubID}")
     public Hub getHub(@PathVariable String hubID, HttpServletRequest request) {
-//        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (isUserAdmin(request))
             return hubServices.getHubByID(Integer.parseInt(hubID));
 //        return null;
     }
     @PostMapping("/hubs")
     public Hub addHub(@RequestBody Hub hub, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return hubServices.addHub(hub);
         return null;
     }
     @PutMapping("/hubs")
     public boolean updateHub(@RequestBody Hub hub, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return hubServices.updateHub(hub);
         return false;
     }
     @DeleteMapping("/hubs/{hubID}")
     public boolean deleteHub(@PathVariable String hubID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return hubServices.removeHub(Integer.parseInt(hubID));
         return false;
     }
     @GetMapping("/hubs/out/{hubID}")
     public Set<Flight> getHubOutboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-//        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (isUserAdmin(request))
             return hubServices.getOutgoingFlights(Integer.parseInt(hubID));
 //        return new HashSet<>();
     }
     @GetMapping("/hubs/in/{hubID}")
     public Set<Flight> getHubInboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-//        if (request.getSession().getAttribute("authority").equals("admin"))
+//        if (isUserAdmin(request))
             return hubServices.getIncomingFlights(Integer.parseInt(hubID));
 //        return new HashSet<>();
     }
+
+
     // orders
     @GetMapping("/orders")
     public List<Order> getAllOrders(HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("admin"))
-            return orderServices.getAllOrders();
-        if (request.getSession().getAttribute("authority") !=null&&request.getSession().getAttribute("authority").equals("user"))
-            return orderServices.getAllOrdersFromUser(Integer.parseInt(
+        if (!isLoggedIn(request)) return new ArrayList<>();
+        if (isUserAdmin(request)) return orderServices.getAllOrders();
+        return orderServices.getAllOrdersFromUser(Integer.parseInt(
                     request.getSession().getAttribute("userid").toString()));
-        return new ArrayList<>();
     }
     @GetMapping("/orders/{orderID}")
     public Order getOrder(@PathVariable String orderID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority") !=null
-                && (request.getSession().getAttribute("authority").equals("admin"))
-        ||request.getSession().getAttribute("authority").equals("user"))
-
+        if (isLoggedIn(request))
             return orderServices.getOrderByID(Integer.parseInt(orderID));
         return null;
     }
     @PostMapping("/orders")
     public Order addOrder(@RequestBody Order order, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return orderServices.addOrder(order);
         return null;
     }
     @PutMapping("/orders")
     public boolean updateOrder(@RequestBody Order order, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return orderServices.updateOrder(order);
         return false;
     }
     @DeleteMapping("/orders/{orderID}")
     public boolean deleteOrder(@PathVariable String orderID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return orderServices.removeOrder(Integer.parseInt(orderID));
         return false;
     }
+
+
     // Trip
     @GetMapping("/trips")
     public List<Trip> getAllTrips(HttpServletRequest request) {
 //        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return tripServices.getAllTrips();
 //        return new ArrayList<>();
     }
+    @GetMapping("/trips/{departure}/{arrival}")
+    public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
+        return flightService.getRoutes(departure, arrival);
+    }
     @GetMapping("/trips/{orderID}")
     public Trip getTrip(@PathVariable String tripID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return tripServices.getTripByID(Integer.parseInt(tripID));
         return null;
     }
     @PostMapping("/trips")
     public Trip addTrip(@RequestBody Trip trip, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return tripServices.addTrip(trip);
         return null;
     }
     @PutMapping("/trips")
     public boolean updateTrip(@RequestBody Trip trip, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return tripServices.updateTrip(trip);
         return false;
     }
     @DeleteMapping("/trips/{orderID}")
     public boolean deleteTrip(@PathVariable String tripID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return tripServices.removeTrip(Integer.parseInt(tripID));
         return false;
     }
+
+
     // Airplane
     @GetMapping("/airplanes")
     public List<Airplane> getAllPlanes(HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return airplaneServices.getAllAirplanes();
         return new ArrayList<>();
     }
     @GetMapping("/airplanes/{planeID}")
     public Airplane getPlane(@PathVariable String planeID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return airplaneServices.getAirplaneByID(Integer.parseInt(planeID));
         return null;
     }
     @PostMapping("/airplanes")
     public Airplane addPlane(@RequestBody Airplane plane, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return airplaneServices.addAirplane(plane);
         return null;
     }
     @PutMapping("/airplanes")
     public boolean updatePlane(@RequestBody Airplane plane, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return airplaneServices.updateAirplane(plane);
         return false;
     }
     @DeleteMapping("/airplanes/{planeID}")
     public boolean deletePlane(@PathVariable String planeID, HttpServletRequest request) {
-        if (request.getSession().getAttribute("authority").equals("admin"))
+        if (isUserAdmin(request))
             return airplaneServices.removeAirplane(Integer.parseInt(planeID));
         return false;
     }
 
+    private boolean isUserAdmin(HttpServletRequest request) {
+        return request.getSession().getAttribute("authority").equals("admin");
+    }
+
+    private boolean isLoggedIn(HttpServletRequest request) {
+        var authority = request.getSession().getAttribute("authority");
+        return "admin".equals(authority) || "user".equals(authority);
+    }
+
+    private boolean isActiveUser(int userID, HttpServletRequest request) {
+        return userID == Integer.parseInt(request.getSession().getAttribute("userid").toString());
+    }
 }
