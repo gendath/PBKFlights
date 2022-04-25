@@ -13,7 +13,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Integer userId;
     private String firstName;
     private String lastName;
     private String email;
@@ -52,11 +52,11 @@ public class User {
         return userId != null ? userId.hashCode() : 0;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -102,5 +102,17 @@ public class User {
 
     public String getAuthority() {
         return authority;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", authority='" + authority + '\'' +
+                '}';
     }
 }

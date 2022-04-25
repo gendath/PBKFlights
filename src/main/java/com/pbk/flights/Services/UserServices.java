@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface UserServices {
-    boolean login(User user, HttpServletRequest request, HttpServletResponse response);
+    User login(User user, HttpServletRequest request, HttpServletResponse response);
     boolean logout(HttpServletRequest request, HttpServletResponse response);
     List<User> getUsers();
     User getUser(int userID);

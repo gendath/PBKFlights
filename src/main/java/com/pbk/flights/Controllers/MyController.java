@@ -99,11 +99,11 @@ public class MyController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public void signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
+    public User signin(@PathVariable String username, @PathVariable String password, HttpServletRequest request, HttpServletResponse response) {
         User u = new User();
         u.setEmail(username);
         u.setPassword(password);
-        this.userServices.login(u, request, response);
+        return this.userServices.login(u, request, response);
     }
 
     @GetMapping("/logout")
@@ -125,6 +125,7 @@ public class MyController {
         userServices.getStatus(request, response);
     }
 
+
     // Hubs
 
     @GetMapping("/hubs")
@@ -133,9 +134,9 @@ public class MyController {
     }
     @GetMapping("/hubs/{hubID}")
     public Hub getHub(@PathVariable String hubID, HttpServletRequest request) {
-        if (isUserAdmin(request))
+//        if (isUserAdmin(request))
             return hubServices.getHubByID(Integer.parseInt(hubID));
-        return null;
+//        return null;
     }
     @PostMapping("/hubs")
     public Hub addHub(@RequestBody Hub hub, HttpServletRequest request) {
@@ -157,16 +158,18 @@ public class MyController {
     }
     @GetMapping("/hubs/out/{hubID}")
     public Set<Flight> getHubOutboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-        if (isUserAdmin(request))
+//        if (isUserAdmin(request))
             return hubServices.getOutgoingFlights(Integer.parseInt(hubID));
-        return new HashSet<>();
+//        return new HashSet<>();
     }
     @GetMapping("/hubs/in/{hubID}")
     public Set<Flight> getHubInboundFlights(@PathVariable String hubID, HttpServletRequest request) {
-        if (isUserAdmin(request))
+//        if (isUserAdmin(request))
             return hubServices.getIncomingFlights(Integer.parseInt(hubID));
-        return new HashSet<>();
+//        return new HashSet<>();
     }
+
+
     // orders
     @GetMapping("/orders")
     public List<Order> getAllOrders(HttpServletRequest request) {
@@ -177,7 +180,7 @@ public class MyController {
     }
     @GetMapping("/orders/{orderID}")
     public Order getOrder(@PathVariable String orderID, HttpServletRequest request) {
-        if (isUserAdmin(request))
+        if (isLoggedIn(request))
             return orderServices.getOrderByID(Integer.parseInt(orderID));
         return null;
     }
@@ -230,13 +233,13 @@ public class MyController {
             return tripServices.updateTrip(trip);
         return false;
     }
-
     @DeleteMapping("/trips/{orderID}")
     public boolean deleteTrip(@PathVariable String tripID, HttpServletRequest request) {
         if (isUserAdmin(request))
             return tripServices.removeTrip(Integer.parseInt(tripID));
         return false;
     }
+
 
     // Airplane
     @GetMapping("/airplanes")
