@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -212,14 +211,14 @@ public class MyController {
     @GetMapping("/trips")
     public List<Trip> getAllTrips(HttpServletRequest request) {
 //        if (request.getSession().getAttribute("authority").equals("admin"))
-        if (isUserAdmin(request))
+//        if (isUserAdmin(request))
             return tripServices.getAllTrips();
 //        return new ArrayList<>();
     }
-    @GetMapping("/trips/{departure}/{arrival}")
-    public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
-        return flightService.getRoutes(departure, arrival);
-    }
+//    @GetMapping("/trips/{departure}/{arrival}")
+//    public Trip getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
+//        return flightService.getRoutes(departure, arrival);
+//    }
     @GetMapping("/trips/{orderID}")
     public Trip getTrip(@PathVariable String tripID, HttpServletRequest request) {
         if (isUserAdmin(request))
