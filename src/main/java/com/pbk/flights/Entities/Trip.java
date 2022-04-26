@@ -3,6 +3,7 @@ package com.pbk.flights.Entities;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,19 +32,29 @@ public class Trip {
     @OneToOne
     private Hub destination;
 
+    private double totalTravelTime =0;
+
+    private BigDecimal totalPrice= BigDecimal.ZERO;
+
 
 
     public Trip() {
     }
 
     public Trip(Flight flight) {
+        seats.put(flight.getFlightId(), null);
         flights.add(flight);
+        this.totalPrice=this.totalPrice.add(flight.getPrice());
+        this.totalTravelTime += flight.getTripTime();
     }
 
 
     public void addFlight(Flight flight, String seat) {
         seats.put(flight.getFlightId(), seat);
         flights.add(flight);
+        this.totalPrice=this.totalPrice.add(flight.getPrice());
+        this.totalTravelTime += flight.getTripTime();
+
     }
 
     public boolean updateSeat(Flight flight, String seat, int userID) {
@@ -60,6 +71,22 @@ public class Trip {
             return op.get();
         }
         return -1d;
+    }
+
+    public double getTotalTravelTime() {
+        return totalTravelTime;
+    }
+
+    public void setTotalTravelTime(double totalTravelTime) {
+        this.totalTravelTime = totalTravelTime;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = BigDecimal.valueOf(totalPrice);
     }
 
     public Flight getLastFlight() {

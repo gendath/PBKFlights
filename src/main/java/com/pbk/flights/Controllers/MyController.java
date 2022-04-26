@@ -210,9 +210,9 @@ public class MyController {
     // Trip
     @GetMapping("/trips")
     public List<Trip> getAllTrips(HttpServletRequest request) {
-        if (isUserAdmin(request))
+//        if (isUserAdmin(request))
             return tripServices.getAllTrips();
-        return new ArrayList<>();
+//        return new ArrayList<>();
     }
     @GetMapping("/trips/{departure}/{arrival}")
     public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
