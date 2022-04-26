@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -107,8 +106,8 @@ public class MyController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        this.userServices.logout(request, response);
+    public void logout(HttpServletRequest request) {
+        this.userServices.logout(request);
     }
 
     // Convenience functions for testing, will be removed
@@ -126,7 +125,7 @@ public class MyController {
     }
 
     @GetMapping("/test/routing/{departure}/{arrival}")
-    public Trip getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {
+    public Trip getTripRoutess(@PathVariable String departure, @PathVariable String arrival) {
         return flightService.getRoutes(departure, arrival).get(0);
     }
 
@@ -211,10 +210,9 @@ public class MyController {
     // Trip
     @GetMapping("/trips")
     public List<Trip> getAllTrips(HttpServletRequest request) {
-//        if (request.getSession().getAttribute("authority").equals("admin"))
         if (isUserAdmin(request))
             return tripServices.getAllTrips();
-//        return new ArrayList<>();
+        return new ArrayList<>();
     }
     @GetMapping("/trips/{departure}/{arrival}")
     public List<Trip> getTripRoutes(@PathVariable String departure, @PathVariable String arrival) {

@@ -39,18 +39,11 @@ public class UserServicesImpl implements UserServices {
     @Override
     public User login(User user, HttpServletRequest request, HttpServletResponse response) {
         var users = userDao.findByEmailIgnoreCaseAndPassword(user.getEmail(), user.getPassword());
-//        PrintWriter writer;
-//        try {
-//            writer = response.getWriter();
-//        } catch (IOException e) {
-//            writer = new PrintWriter(System.out);
-//        }
-//        if (users.isEmpty()) {
-//            writer.println("Invalid username or password");
-//
-//            logout(request, response);
-//            return null;
-//        }
+
+        if (users.isEmpty()) {
+            logout(request);
+            return null;
+        }
         var current = new User();
                 current.setUserId(users.get(0).getUserId());
                 current.setEmail(users.get(0).getEmail());
@@ -68,17 +61,13 @@ public class UserServicesImpl implements UserServices {
         request.getSession().setAttribute("authority", current.getAuthority());
         try {
             request.authenticate(response);
-//            writer.printf("%s successfully logged in as %n", current.getFirstName());
         } catch (Exception e) {
-//            writer.println("Could not authenticate user");
         }
         return current;
     }
 
-    // TODO: add OAuth login method
-
     @Override
-    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
+    public boolean logout(HttpServletRequest request) {
         try {
             request.getSession().setAttribute("userid", "");
             request.getSession().setAttribute("username", "");
@@ -87,8 +76,6 @@ public class UserServicesImpl implements UserServices {
             request.getSession().setAttribute("authority", "");
             request.logout();
             request.getSession().invalidate();
-            PrintWriter writer = response.getWriter();
-            writer.println("Successfully logged out");
             return true;
         } catch (Exception e) {
             return false;
